@@ -1,0 +1,88 @@
+---
+title: "a6_task3_elmera_azadpour"
+author: "Elmera Azadpour"
+date: "11/30/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(here)
+library(janitor)
+library(kableExtra)
+library(effsize)
+```
+
+## Read in 'lizards.csv' data
+```{r}
+lizards <- read_csv(here("data", "lizards.csv"))
+```
+
+## clean data frame and filter
+```{r}
+lizards_clean <- lizards %>%
+  select(spp, sex, total_length) %>% 
+  filter(sex == "F") %>% 
+  filter(spp %in% c("CNUN", "CNTE"))
+```
+
+## Data visualization comparing total lengths of female lizards for the two species: CNUN and CNTE
+```{r, fig.cap = "**Figure 1**.  Boxplot comparing total lengths of female lizards for CNUN (*Cnemidophorus uniparens*, the Desert Grassland lizard) and CNTE (*Cnemidophorus tessalatus*, the Colorado Checkered lizard)"}
+ggplot(data = lizards_clean,
+       aes(x = spp, 
+           y = total_length)) + 
+  geom_boxplot(aes(fill = spp)) +
+  theme_minimal() +
+  theme(legend.position = "none") + 
+  labs(x = "Species", y = "Total length (mm)")
+```
+
+
+## Summary table that contains the mean and SD for total length, and sample size, for each group (female CNUN and CNTE lizards)
+```{r}
+lizards_clean_table <- lizards_clean %>% 
+ group_by(spp) %>% 
+  summarise(mean_length = mean(total_length, na.rm=T),
+            sd_length = sd(total_length, na.rm=T),
+            n = n())
+
+lizards_clean_table %>%  
+  kable(col.names = c("Species",
+                      "Mean length (mm)",
+                      "Standard deviation",
+                      "Sample size (n)"), 
+        caption = "**Table 1**: summary statistics of female CNUN and CNTE lizards") %>% 
+  kable_styling(full_width = FALSE) 
+```
+
+## Exploratory analyses
+```{r}
+# Histograms
+ggplot(data = lizards_clean, aes(x = total_length)) +
+  geom_histogram(bins = 15) +
+  facet_wrap(~spp, scales = "free")
+
+# QQ Plots
+ggplot(data= lizards_clean, aes(sample = total_length)) +
+  geom_qq() +
+  facet_wrap(~spp)
+```
+
+## Cohen's d effect size
+```{r}
+# create vectors 
+lizard_length_cnte <- lizards_clean %>% 
+  select(c("spp", "total_length")) %>% 
+  filter(spp == "CNTE") %>% 
+  pull(total_length)
+
+lizard_length_cnun <- lizards_clean %>% 
+  select(c("spp", "total_length")) %>% 
+  filter(spp == "CNUN") %>% 
+  pull(total_length)
+
+# cohens d/ effect size
+cohen.d(lizard_length_cnte, lizard_length_cnun, na.rm = TRUE)
+```
+

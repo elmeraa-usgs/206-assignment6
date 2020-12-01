@@ -1,5 +1,5 @@
 ---
-title: "a6_task3_elmera_azadpour"
+title: "Assignment 6, task 3: lizard length vs species"
 author: "Elmera Azadpour"
 date: "11/30/2020"
 output: html_document
@@ -13,22 +13,23 @@ library(janitor)
 library(kableExtra)
 library(effsize)
 ```
+#### Introduction:
+Utilizing data from the lizard pitfall trap data (LTER-II, LTER-III) ver 36: Environmental Data Initiative (https://doi.org/10.6073/pasta/ff37b4cace16a9943575f3fd7067064e), I compared total lizard length (mm) of two species: CNUN (*Cnemidophorus uniparens*, the Desert Grassland lizard) and CNTE (*Cnemidophorus tessalatus*, the Colorado Checkered lizard). To examine a significant difference in total length difference in mean total length between female lizards for the two species, I conducted a Welch’s two-sample t-test and Cohen's d effect size analysis. 
 
-## Read in 'lizards.csv' data
-```{r}
+
+```{r, error=FALSE, warning=FALSE, message=FALSE, echo = FALSE, include = FALSE}
 lizards <- read_csv(here("data", "lizards.csv"))
 ```
 
-## clean data frame and filter
-```{r}
+```{r, error=FALSE, warning=FALSE, message=FALSE, echo = FALSE, include=FALSE}
 lizards_clean <- lizards %>%
   select(spp, sex, total_length) %>% 
   filter(sex == "F") %>% 
   filter(spp %in% c("CNUN", "CNTE"))
 ```
 
-## Data visualization comparing total lengths of female lizards for the two species: CNUN and CNTE
-```{r, fig.cap = "**Figure 1**.  Boxplot comparing total lengths of female lizards for CNUN (*Cnemidophorus uniparens*, the Desert Grassland lizard) and CNTE (*Cnemidophorus tessalatus*, the Colorado Checkered lizard)"}
+####  Data visualization comparing total lengths of female lizards for the two species: CNUN and CNTE
+```{r, error=FALSE, warning=FALSE, message=FALSE, echo = FALSE, fig.cap = "**Figure 1**.  Boxplot comparing total lengths of female lizards for CNUN (*Cnemidophorus uniparens*, the Desert Grassland lizard) and CNTE (*Cnemidophorus tessalatus*, the Colorado Checkered lizard),"}
 ggplot(data = lizards_clean,
        aes(x = spp, 
            y = total_length)) + 
@@ -38,9 +39,8 @@ ggplot(data = lizards_clean,
   labs(x = "Species", y = "Total length (mm)")
 ```
 
-
-## Summary table that contains the mean and SD for total length, and sample size, for each group (female CNUN and CNTE lizards)
-```{r}
+####  Summary table that contains the mean and SD for total length, and sample size, for each group (female CNUN and CNTE lizards)
+```{r, error=FALSE, warning=FALSE, message=FALSE, echo = FALSE}
 lizards_clean_table <- lizards_clean %>% 
  group_by(spp) %>% 
   summarise(mean_length = mean(total_length, na.rm=T),
@@ -56,8 +56,8 @@ lizards_clean_table %>%
   kable_styling(full_width = FALSE) 
 ```
 
-## Exploratory analyses
-```{r}
+
+```{r, error=FALSE, warning=FALSE, message=FALSE, echo = FALSE, include = FALSE}
 # Histograms
 ggplot(data = lizards_clean, aes(x = total_length)) +
   geom_histogram(bins = 15) +
@@ -69,8 +69,8 @@ ggplot(data= lizards_clean, aes(sample = total_length)) +
   facet_wrap(~spp)
 ```
 
-## Cohen's d effect size
-```{r}
+
+```{r, error=FALSE, warning=FALSE, message=FALSE, echo = FALSE, include = FALSE}
 # create vectors 
 lizard_length_cnte <- lizards_clean %>% 
   select(c("spp", "total_length")) %>% 
@@ -82,7 +82,16 @@ lizard_length_cnun <- lizards_clean %>%
   filter(spp == "CNUN") %>% 
   pull(total_length)
 
+t.test(lizard_length_cnte, lizard_length_cnun)
+
 # cohens d/ effect size
 cohen.d(lizard_length_cnte, lizard_length_cnun, na.rm = TRUE)
 ```
 
+#### Summary:
++ This analysis indicates CNTE (*Cnemidophorus tessalatus*, the Colorado Checkered lizard) had a larger mean (244.8929 ± 47.32499, *n* = 28; mean ± 1 standard deviation), compared to CNUN (*Cnemidophorus uniparens*, the Desert Grassland lizard) which had a smaller mean (147.6000 ± 34.55341, *n* = 47; mean ± 1 standard deviation). The acutal difference in means from CNTE and CNUN lizards is 97.2929. The outcome of the two sample t-test indicated there is not a strong change (*p* < 0.001) of randomly selecting two samples from populations with the same that are this difference by change. In sum, the difference in means is significant (Welch’s two-sample t-test: t(9.2834) = 46.434, *p* < 0.001), and the effect size is large (Cohen’s d = 2.41597).
+
+#### Citations:
++ Data source: Lightfoot, D. 2017. Lizard pitfall trap data (LTER-II, LTER-III) ver 36. Environmental Data Initiative. https://doi.org/10.6073/pasta/ff37b4cace16a9943575f3fd7067064e 
+
++ Metadata: https://portal.edirepository.org/nis/metadataviewer?packageid=knb-lter-jrn.210007001.36

@@ -1,0 +1,46 @@
+---
+title: 'Assignment 6, task 4: Mono Lake levels vizualization of Lake Level (ft. above sea level) from 1850 - 2017'
+author: "Elmera Azadpour"
+date: "12/1/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(janitor)
+library(here)
+```
+
+```{r, error=FALSE, warning=FALSE, message=FALSE, echo = FALSE}
+lake <- read_csv(here("data", "mono_lake_annual_levels.csv"), skip = 5)
+
+lake <- lake %>% 
+  clean_names() %>%  
+  select(year, lake_level_feet_above_sea_level)
+```
+
+```{r, error=FALSE, warning=FALSE, message=FALSE, echo = FALSE, fig.cap = "**Figure 1**.Line graph deplicting the change in Mono Lake levels (feet above sea level) from 1850 -2017 in in Lee Vining, California (home to the Kootzaduka’a (or Kutzadika’a) Tribe). Orange point indicates when bridges emerged between the mainland and islands, allowing predators (e.g. coyotes) to access major bird nesting sites. Uppermost red dashed line indicates threshold where there is decreased availability of brine shrimp as food source for eared grebes and California gull bird (at a salinity of 120 g/L) and lower red dashed line indiated threshold where the impacts would be severe (at saliniites above 150 g/L)"}
+ggplot(data = lake, aes(x= year, y=lake_level_feet_above_sea_level)) + 
+  geom_point(size =1, alpha = .5) +
+  geom_line(col= "red") +
+  scale_x_continuous(breaks=seq(1850,2017, 20)) +
+  ylim(6330, 6450) +
+  theme_minimal() +
+  labs(x = "Year", y= "Lake Level (ft. above sea level)") +
+  theme(text = element_text(size=14)) +
+  annotate(
+    geom = "segment", x = 1995, y = 6378, xend = 1988, yend = 6390,  
+    arrow = arrow(length = unit(2, "mm"))
+  ) +
+  annotate(
+    geom = "text", x = 1978, y = 6408, 
+    label = "land bridges emerged between \nthe mainland and islands, \nallowing predators \n(e.g. coyotes) \nto access major bird \nnesting sites", hjust = "left", size = 2.5) +
+  annotate(geom = "point", x = 1995, y = 6377.80, 
+           colour = "orange", size = 3, alpha = 0.8) +
+  geom_hline(yintercept= c(6350,6360), linetype='dotted', col = 'red')  +
+  geom_ribbon(aes(ymax=6360, ymin=6350), fill="pink", alpha=.5) +
+  annotate("text", x = 1995, y=6362, label = "decrease in availability of brine shrimp", size =2.5) +
+  annotate("text", x = 1995, y=6352, label = "severe impacts", size =2.5)
+```
+

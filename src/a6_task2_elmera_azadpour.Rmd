@@ -1,5 +1,5 @@
 ---
-title: 'assignment6, task 2: survey responses - ea'
+title: 'assignment6, task 2: survey responses'
 author: "Elmera Azadpour"
 date: "11/30/2020"
 output: html_document

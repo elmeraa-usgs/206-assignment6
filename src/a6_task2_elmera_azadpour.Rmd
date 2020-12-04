@@ -76,7 +76,7 @@ survey_x2
 survey_tidy <- tidy(survey_x2)
 ```
 ## Chi-square results and summary
-A chi-square test for independence compares two variables in a contingency table to see if they are related. In a more general sense, it tests to see whether distributions of categorical variables differ from each another. For this analysis, there is a significant association (i.e. non-independence) between political affiliation and and if a person considers themself an environmentalist ($\chi$^2^(`r survey_tidy$parameter`) = `r round(survey_tidy$statistic,2)`, *p* = < 0.001). 
+A chi-square test for independence compares two variables in a contingency table to see if they are related. In a more general sense, it tests to see whether distributions of categorical variables differ from each another. For this analysis, there is a significant association (i.e. non-independence) between political affiliation and and if a person considers themself an environmentalist ($\chi$^2^(`r survey_tidy$parameter`) = `r round(survey_tidy$statistic,2)`, *p*-value = `r format(survey_tidy$p.value, scientific = TRUE, digits = 3)`). 
 
 
 #### Citations:

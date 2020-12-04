@@ -22,12 +22,14 @@ Utilizing data from the lizard pitfall trap data (LTER-II, LTER-III) ver 36: Env
 lizards <- read_csv(here("data", "lizards.csv"))
 ```
 
+
 ```{r, error=FALSE, warning=FALSE, message=FALSE, echo = FALSE, include=FALSE}
 lizards_clean <- lizards %>%
   select(spp, sex, total_length) %>% 
   filter(sex == "F") %>% 
   filter(spp %in% c("CNUN", "CNTE"))
 ```
+
 
 ```{r, error=FALSE, warning=FALSE, message=FALSE, echo = FALSE, fig.cap = "**Figure 1**.  Boxplot comparing total lengths of female lizards for CNUN (*Cnemidophorus uniparens*, the Desert Grassland lizard) and CNTE (*Cnemidophorus tessalatus*, the Colorado Checkered lizard),"}
 ####  Data visualization comparing total lengths of female lizards for the two species: CNUN and CNTE

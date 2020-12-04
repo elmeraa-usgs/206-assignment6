@@ -1,5 +1,5 @@
 ---
-title: 'assignment6, task 2: survey responses'
+title: 'Assignment 6, Task 2: Survey Responses of political affiliation and recognition as an environmentalist'
 author: "Elmera Azadpour"
 date: "11/30/2020"
 output: html_document
@@ -14,18 +14,18 @@ library(broom)
 library(kableExtra)
 ```
 
-Introduction:
+## Introduction:
 This task analyzes the association between respondents’ political affiliation (coined “conservative” or “liberal” by self-identification) and if they consider themself an environmentalist. The variables in the dataset (conservation_survey.csv) I have used include:
-+ env_id: response to survey statement "I consider myself an environmentalist," with outcomes 1 = Yes, 2 = No, 3 = Unsure
-+ pol_or: response to survey question "How do you self-identify politically?" Response values 1 - 3 are “conservative” (strongly to slightly), and values 5 - 7 are “liberal” (slightly to strongly).
 
+- env_id: response to survey statement "I consider myself an environmentalist," with outcomes 1 = Yes, 2 = No, 3 = Unsure
+- pol_or: response to survey question "How do you self-identify politically?" Response values 1 - 3 are “conservative” (strongly to slightly), and values 5 - 7 are “liberal” (slightly to strongly).
+
+```{r, error=FALSE, warning=FALSE, message=FALSE, echo = FALSE, include=FALSE}
 ## Read in survey data 
-```{r}
 survey <- read_csv(here("data", "conservation_survey.csv"))
 ```
-
+```{r, error=FALSE, warning=FALSE, message=FALSE, echo = FALSE, include=FALSE}
 ## only keep variables: 'env_id' and 'pol_or'
-```{r}
 survey_clean <- survey %>% 
   clean_names() %>% 
   select(env_id, pol_or) %>% 
@@ -41,8 +41,8 @@ survey_environmentalist <- survey_clean %>%
    env_id == 3 ~ "unsure"))
 ```
 
-Finalized table that shows counts and proportions of "liberal" and "conservative" survey respondents who responded with "yes", "no" and "unsure" to the statement: "I consider myself an environmentalist"
-```{r}
+```{r, error=FALSE, warning=FALSE, message=FALSE, echo = FALSE}
+## Finalized table that shows counts and proportions of "liberal" and "conservative" survey respondents who responded with "yes", "no" and "unsure" to the statement: "I consider myself an environmentalist"
 survey_counts <- survey_environmentalist %>% 
   janitor::tabyl(party, environmentalist)
 
@@ -63,8 +63,9 @@ survey_ct %>%
   kable_styling(full_width = FALSE) 
 ```
 
+
+```{r, error=FALSE, warning=FALSE, message=FALSE, echo = FALSE, include=FALSE}
 ## Chi-square test
-```{r}
 survey_ct <- survey_counts %>%   
   drop_na() %>% 
   column_to_rownames(var = "party")
@@ -74,8 +75,8 @@ survey_x2
 
 survey_tidy <- tidy(survey_x2)
 ```
-
-There is a significant association (i.e. non-independence) between poltical affiliation and and if a person considers themself an environmentalist ($\chi$^2^(`r survey_tidy$parameter`) = `r round(survey_tidy$statistic,2)`, *p* = < 0.001). 
+## Chi-square results and summary
+A chi-square test for independence compares two variables in a contingency table to see if they are related. In a more general sense, it tests to see whether distributions of categorical variables differ from each another. For this analysis, there is a significant association (i.e. non-independence) between political affiliation and and if a person considers themself an environmentalist ($\chi$^2^(`r survey_tidy$parameter`) = `r round(survey_tidy$statistic,2)`, *p* = < 0.001). 
 
 
 #### Citations:

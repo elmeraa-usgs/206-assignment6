@@ -36,6 +36,6 @@ ggplot(data = lake, aes(x= year, y=lake_level_feet_above_sea_level)) +
   annotate("text", x = 1993, y=6352, label = "Severe impacts on bird populations", size =2.5) +
   geom_rect(aes(xmin = 1850, xmax = 2017, ymin = -Inf, ymax = 6350),
                    fill = "#FFCCCC", alpha = 0.03) +
-  geom_point(data=lakebridge, colour = "black", size = 1, alpha = 0.8)
+  geom_point(data=lakebridge, colour = "black", size = 1, alpha = 0.8) +
+  ggtitle("Mono Lake Level from 1850 - 2017")
 ```
-

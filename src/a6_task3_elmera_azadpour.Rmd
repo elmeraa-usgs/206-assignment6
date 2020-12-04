@@ -12,6 +12,7 @@ library(here)
 library(janitor)
 library(kableExtra)
 library(effsize)
+library(broom)
 ```
 #### Introduction:
 Utilizing data from the lizard pitfall trap data (LTER-II, LTER-III) ver 36: Environmental Data Initiative (https://doi.org/10.6073/pasta/ff37b4cace16a9943575f3fd7067064e), I compared total lizard length (mm) of two species: CNUN (*Cnemidophorus uniparens*, the Desert Grassland lizard) and CNTE (*Cnemidophorus tessalatus*, the Colorado Checkered lizard). To examine a significant difference in total length difference in mean total length between female lizards for the two species, I conducted a Welch’s two-sample t-test and Cohen's d effect size analysis. 
@@ -28,8 +29,8 @@ lizards_clean <- lizards %>%
   filter(spp %in% c("CNUN", "CNTE"))
 ```
 
-####  Data visualization comparing total lengths of female lizards for the two species: CNUN and CNTE
 ```{r, error=FALSE, warning=FALSE, message=FALSE, echo = FALSE, fig.cap = "**Figure 1**.  Boxplot comparing total lengths of female lizards for CNUN (*Cnemidophorus uniparens*, the Desert Grassland lizard) and CNTE (*Cnemidophorus tessalatus*, the Colorado Checkered lizard),"}
+####  Data visualization comparing total lengths of female lizards for the two species: CNUN and CNTE
 ggplot(data = lizards_clean,
        aes(x = spp, 
            y = total_length)) + 
@@ -39,8 +40,9 @@ ggplot(data = lizards_clean,
   labs(x = "Species", y = "Total length (mm)")
 ```
 
-####  Summary table that contains the mean and SD for total length, and sample size, for each group (female CNUN and CNTE lizards)
+
 ```{r, error=FALSE, warning=FALSE, message=FALSE, echo = FALSE}
+####  Summary table that contains the mean and SD for total length, and sample size, for each group (female CNUN and CNTE lizards)
 lizards_clean_table <- lizards_clean %>% 
  group_by(spp) %>% 
   summarise(mean_length = mean(total_length, na.rm=T),
@@ -82,14 +84,17 @@ lizard_length_cnun <- lizards_clean %>%
   filter(spp == "CNUN") %>% 
   pull(total_length)
 
-t.test(lizard_length_cnte, lizard_length_cnun)
+ttest <-t.test(lizard_length_cnte, lizard_length_cnun)
+ttest_tidy <- tidy(ttest)
+
 
 # cohens d/ effect size
-cohen.d(lizard_length_cnte, lizard_length_cnun, na.rm = TRUE)
+cohen_test <- cohen.d(lizard_length_cnte, lizard_length_cnun, na.rm = TRUE)
 ```
 
 #### Summary:
-+ This analysis indicates CNTE (*Cnemidophorus tessalatus*, the Colorado Checkered lizard) had a larger mean (244.8929 ± 47.32499, *n* = 28; mean ± 1 standard deviation), compared to CNUN (*Cnemidophorus uniparens*, the Desert Grassland lizard) which had a smaller mean (147.6000 ± 34.55341, *n* = 47; mean ± 1 standard deviation). The acutal difference in means from CNTE and CNUN lizards is 97.2929. The outcome of the two sample t-test indicated there is not a strong change (*p* < 0.001) of randomly selecting two samples from populations with the same that are this difference by change. In sum, the difference in means is significant (Welch’s two-sample t-test: t(9.2834) = 46.434, *p* < 0.001), and the effect size is large (Cohen’s d = 2.41597).
++ This analysis indicates CNTE (*Cnemidophorus tessalatus*, the Colorado Checkered lizard) had a larger mean (244.90 ± 47.339, *n* = 28; mean ± 1 standard deviation), compared to CNUN (*Cnemidophorus uniparens*, the Desert Grassland lizard) which had a smaller mean (147.60 ± 34.55, *n* = 47; mean ± 1 standard deviation). The actual difference in means from CNTE and CNUN lizards is 97.2929. The outcome of the two sample t-test indicated there is not a strong change (*p* < 0.001) of randomly selecting two samples from populations with the same that are this difference by change. In sum, the difference in means is significant (Welch’s two-sample t-test: t(`r round(ttest_tidy$parameter,2)`) = `r round(ttest_tidy$statistic,2)`, *p* < 0.001), and the effect size is large (Cohen’s d = 2.42).
+
 
 #### Citations:
 + Data source: Lightfoot, D. 2017. Lizard pitfall trap data (LTER-II, LTER-III) ver 36. Environmental Data Initiative. https://doi.org/10.6073/pasta/ff37b4cace16a9943575f3fd7067064e 

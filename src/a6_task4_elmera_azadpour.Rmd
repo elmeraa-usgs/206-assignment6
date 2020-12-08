@@ -20,7 +20,7 @@ lake <- lake %>%
   select(year, lake_level_feet_above_sea_level)
 ```
 
-```{r,error=FALSE, warning=FALSE, message=FALSE, echo = FALSE, fig.cap = "**Figure 1**.Line graph deplicting the change in Mono Lake levels (feet above sea level) from 1850 -2017 in in Lee Vining, California (home to the Kootzaduka’a (or Kutzadika’a) Tribe). Black points indicates when land bridges emerged between the mainland and islands, allowing predators (e.g. coyotes) to access major bird nesting sites (ft. above sea level <= 6,377ft). Uppermost red dashed line indicates threshold where there is decreased availability of brine shrimp as food source for eared grebes and California gull bird (at a salinity of 120 g/L or lake level of 6360 ft.) and lower red dashed line indiated threshold where the impacts would be severe (at saliniites above 150 g/L or at lake levels below 6350 ft.), based on the *The Mono Basin Ecosystem: Effects of Changing Lake Level* (1987)."}
+```{r,error=FALSE, fig.width = 10, warning=FALSE, message=FALSE, echo = FALSE, fig.cap = "**Figure 1**. Line graph deplicting the change in Mono Lake levels (feet above sea level) from 1850 -2017 in in Lee Vining, California (home to the Kootzaduka’a (or Kutzadika’a) Tribe). Black points indicates when land bridges emerged between the mainland and islands, allowing predators (e.g. coyotes) to access major bird nesting sites (ft. above sea level <= 6,377ft). Uppermost red dashed line indicates threshold where there is decreased availability of brine shrimp as food source for eared grebes and California gull bird (at a salinity of 120 g/L or lake level of 6360 ft.) and lower red dashed line indiated threshold where the impacts would be severe (at saliniites above 150 g/L or at lake levels below 6350 ft.), based on the *The Mono Basin Ecosystem: Effects of Changing Lake Level* (1987)."}
 lakebridge <- lake %>%  filter(lake_level_feet_above_sea_level < 6378)
 ggplot(data = lake, aes(x= year, y=lake_level_feet_above_sea_level)) + 
   geom_point(size =1, alpha = .5, col = "red") +
@@ -32,8 +32,8 @@ ggplot(data = lake, aes(x= year, y=lake_level_feet_above_sea_level)) +
   theme(text = element_text(size=14)) +
   geom_hline(yintercept= c(6350,6360), linetype='dotted', col = 'red')  +
   geom_ribbon(aes(ymax=6360, ymin=6350), fill="#FFCC99", alpha=.5) +
-  annotate("text", x = 1992, y=6362, label = "Decrease in availability of brine shrimp", size =2.5) +
-  annotate("text", x = 1993, y=6352, label = "Severe impacts on bird populations", size =2.5) +
+  annotate("text", x = 1992, y=6362, label = "Decrease in availability of brine shrimp", size = 3) +
+  annotate("text", x = 1993, y=6352, label = "Severe impacts on bird populations", size = 3) +
   geom_rect(aes(xmin = 1850, xmax = 2017, ymin = -Inf, ymax = 6350),
                    fill = "#FFCCCC", alpha = 0.03) +
   geom_point(data=lakebridge, colour = "black", size = 1, alpha = 0.8) +
